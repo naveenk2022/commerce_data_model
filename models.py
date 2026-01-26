@@ -7,6 +7,7 @@ from sqlalchemy import (
     Identity,
     Text,
     DateTime,
+    Table,
 )
 from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy.sql import func
@@ -71,6 +72,18 @@ class Order(Base):
     )
 
 
+product_tags = Table(
+    "product_tags",
+    Base.metadata,
+    Column(
+        "product_id",
+        ForeignKey("products.product_id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column("tag_id", ForeignKey("tags.tag_id", ondelete="CASCADE"), primary_key=True),
+)
+
+
 class Product(Base):
     __tablename__ = "products"
 
@@ -83,3 +96,12 @@ class Product(Base):
         back_populates="product",
         cascade="all, delete-orphan",
     )
+    tags = relationship("Tag", secondary=product_tags, back_populates="products")
+
+
+class Tag(Base):
+    __tablename__ = "tags"
+
+    tag_id = Column(Integer, Identity(always=True), primary_key=True)
+    name = Column(String, nullable=False, unique=True)
+    products = relationship("Product", secondary=product_tags, back_populates="tags")
