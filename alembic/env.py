@@ -6,8 +6,16 @@ from alembic_utils.replaceable_entity import register_entities
 from alembic import context
 from models import Base
 from db_views import order_line_items
+from db_functions import timestamp_update_on_edit
+from db_triggers import timestamp_update_apply_products_trigger
 
-register_entities([order_line_items])
+register_entities(
+    [
+        order_line_items,
+        timestamp_update_on_edit,
+        timestamp_update_apply_products_trigger,
+    ]
+)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
