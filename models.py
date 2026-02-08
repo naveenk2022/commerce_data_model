@@ -91,6 +91,9 @@ class Product(Base):
     product_name = Column(String, nullable=False)
     description = Column(Text)
     price = Column(Float, nullable=False)
+    last_edited = Column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
     orders = relationship(
         "OrderProduct",
         back_populates="product",
